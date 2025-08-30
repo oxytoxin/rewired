@@ -1,26 +1,24 @@
 <?php
 
-    namespace Rewired\Traits;
+namespace Rewired\Traits;
 
-    use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\ValidationException;
 
-    trait HasRewiredComponent
+trait HasRewiredComponent
+{
+    public array $props = [];
+
+    public function bootHasReactComponent(): void
     {
-        public array $props = [];
-
-        public function bootHasReactComponent(): void
-        {
-            $this->resetErrorBag();
-        }
-
-        public function rewiredValidation(array $messages)
-        {
-            $messages = collect($messages)->mapWithKeys(fn(
-                $message,
-                $key
-            ) => [str($key)->prepend('props.')->toString() => $message])->toArray();
-            throw ValidationException::withMessages($messages);
-        }
-
-
+        $this->resetErrorBag();
     }
+
+    public function rewiredValidation(array $messages)
+    {
+        $messages = collect($messages)->mapWithKeys(fn (
+            $message,
+            $key
+        ) => [str($key)->prepend('props.')->toString() => $message])->toArray();
+        throw ValidationException::withMessages($messages);
+    }
+}
