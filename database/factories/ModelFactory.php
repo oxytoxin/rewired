@@ -1,19 +1,19 @@
 <?php
 
-namespace oxytoxin\Rewired\Database\Factories;
+    namespace Rewired\Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+    use Illuminate\Database\Eloquent\Factories\Factory;
 
-/*
-class ModelFactory extends Factory
-{
-    protected $model = YourModel::class;
-
-    public function definition()
+    /*
+    class ModelFactory extends Factory
     {
-        return [
+        protected $model = YourModel::class;
 
-        ];
+        public function definition()
+        {
+            return [
+
+            ];
+        }
     }
-}
-*/
+    */

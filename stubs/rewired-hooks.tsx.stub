@@ -1,0 +1,49 @@
+import { useRef, useState } from 'react';
+
+export function useLivewireAction(wire: never, method: string, minDelay = 150) {
+    const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState<never | null>(null);
+    const [data, setData] = useState<never | null>(null);
+
+    const timerRef = useRef<number | null>(null);
+
+    const call = async (...args: never[]) => {
+        // Ignore synthetic or DOM events
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if (args.length === 1 && (args[0] instanceof Event || args[0]?.nativeEvent instanceof Event)) {
+            args = [];
+        }
+
+        setErrors(null);
+
+        // Start delayed spinner
+        timerRef.current = window.setTimeout(() => {
+            setIsLoading(true);
+        }, minDelay);
+
+        try {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
+            const response = await (wire as never)[method](...args);
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+                timerRef.current = null;
+            }
+            setIsLoading(false);
+            setErrors(response.errors);
+            setData(response.result);
+            return { data: response.result, errors: errors };
+        } catch (e) {
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+                timerRef.current = null;
+            }
+            setIsLoading(false);
+            setErrors(null);
+            throw e;
+        }
+    };
+
+    return { call, isLoading, errors, data };
+}

@@ -1,0 +1,15 @@
+import { useLivewireAction } from '@/rewired-hooks';
+
+export default function TestComponent({ wire }) {
+    const save = useLivewireAction(wire, 'save');
+    return (
+        <div>
+            <button onClick={() => save.call()}>
+                Save
+                {save.isLoading ? <p>Loading...</p> : null}
+            </button>
+            <pre>Errors: {JSON.stringify(save.errors)}</pre>
+            <pre>Data: {JSON.stringify(save.data)}</pre>
+        </div>
+    );
+}
