@@ -1,12 +1,11 @@
 <?php
 
-    namespace Rewired;
+namespace Rewired;
 
-    class Rewired
+class Rewired
+{
+    public static function randomInt(): int
     {
-
-        public static function randomInt(): int
-        {
-            return rand(1, 2000);
-        }
+        return rand(1, 2000);
     }
+}

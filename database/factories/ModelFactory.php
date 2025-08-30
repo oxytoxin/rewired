@@ -1,19 +1,19 @@
 <?php
 
-    namespace Rewired\Database\Factories;
+namespace Rewired\Database\Factories;
 
-    use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-    /*
-    class ModelFactory extends Factory
+/*
+class ModelFactory extends Factory
+{
+    protected $model = YourModel::class;
+
+    public function definition()
     {
-        protected $model = YourModel::class;
+        return [
 
-        public function definition()
-        {
-            return [
-
-            ];
-        }
+        ];
     }
-    */
+}
+*/
