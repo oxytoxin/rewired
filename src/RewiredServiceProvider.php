@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace oxytoxin\Rewired;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
+use oxytoxin\Rewired\Commands\RewiredCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class RewiredServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,10 +16,10 @@ class SkeletonServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('skeleton')
+            ->name('rewired')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_migration_table_name_table')
-            ->hasCommand(SkeletonCommand::class);
+            ->hasMigration('create_rewired_table')
+            ->hasCommand(RewiredCommand::class);
     }
 }
