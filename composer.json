@@ -1,6 +1,7 @@
 {
     "name": "oxytoxin/rewired",
     "description": "A Laravel package that makes Livewire and React play nice with each other.",
+    "version": "0.01",
     "keywords": [
         "Lerry Casero",
         "laravel",
