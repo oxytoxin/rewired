@@ -1,37 +1,36 @@
 <?php
 
-namespace Rewired\Tests;
+    namespace Rewired\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
-use oxytoxin\Rewired\RewiredServiceProvider;
+    use Illuminate\Database\Eloquent\Factories\Factory;
+    use Orchestra\Testbench\TestCase as Orchestra;
 
-class TestCase extends Orchestra
-{
-    protected function setUp(): void
+    class TestCase extends Orchestra
     {
-        parent::setUp();
+        protected function setUp(): void
+        {
+            parent::setUp();
 
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'oxytoxin\\Rewired\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
+            Factory::guessFactoryNamesUsing(
+                fn(string $modelName) => 'oxytoxin\\Rewired\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            );
+        }
+
+        protected function getPackageProviders($app)
+        {
+            return [
+                RewiredServiceProvider::class,
+            ];
+        }
+
+        public function getEnvironmentSetUp($app)
+        {
+            config()->set('database.default', 'testing');
+
+            /*
+             foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/database/migrations') as $migration) {
+                (include $migration->getRealPath())->up();
+             }
+             */
+        }
     }
-
-    protected function getPackageProviders($app)
-    {
-        return [
-            RewiredServiceProvider::class,
-        ];
-    }
-
-    public function getEnvironmentSetUp($app)
-    {
-        config()->set('database.default', 'testing');
-
-        /*
-         foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/database/migrations') as $migration) {
-            (include $migration->getRealPath())->up();
-         }
-         */
-    }
-}

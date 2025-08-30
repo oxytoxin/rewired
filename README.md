@@ -16,7 +16,6 @@ Feel free to create discussions, open pull requests or provide suggestions.
 
 This is my first ever Laravel package, so please go easy on me 😅.
 
-
 ## Installation
 
 You can install the package via composer:
@@ -54,7 +53,7 @@ php artisan vendor:publish --tag="rewired-views"
 ## Usage
 
 ```php
-$rewired = new oxytoxin\Rewired();
+$rewired = new Rewired();
 echo $rewired->echoPhrase('Hello, oxytoxin!');
 ```
 

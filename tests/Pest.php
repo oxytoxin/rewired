@@ -1,5 +1,5 @@
 <?php
 
-use oxytoxin\Rewired\Tests\TestCase;
+    use Rewired\Tests\TestCase;
 
-uses(TestCase::class)->in(__DIR__);
+    uses(TestCase::class)->in(__DIR__);
