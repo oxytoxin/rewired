@@ -1,5 +1,12 @@
 <?php
 
-namespace oxytoxin\Rewired;
+    namespace Rewired;
 
-class Rewired {}
+    class Rewired
+    {
+
+        public static function randomInt(): int
+        {
+            return rand(1, 2000);
+        }
+    }

@@ -30,13 +30,13 @@
     },
     "autoload": {
         "psr-4": {
-            "oxytoxin\\Rewired\\": "src/",
-            "oxytoxin\\Rewired\\Database\\Factories\\": "database/factories/"
+            "Rewired\\": "src/",
+            "Rewired\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "oxytoxin\\Rewired\\Tests\\": "tests/",
+            "Rewired\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -58,10 +58,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "oxytoxin\\Rewired\\RewiredServiceProvider"
+                "Rewired\\RewiredServiceProvider"
             ],
             "aliases": {
-                "Rewired": "oxytoxin\\Rewired\\Facades\\Rewired"
+                "Rewired": "Rewired\\Facades\\Rewired"
             }
         }
     },

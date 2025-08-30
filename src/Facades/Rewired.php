@@ -1,16 +1,16 @@
 <?php
 
-namespace oxytoxin\Rewired\Facades;
+    namespace Rewired\Facades;
 
-use Illuminate\Support\Facades\Facade;
+    use Illuminate\Support\Facades\Facade;
 
-/**
- * @see \oxytoxin\Rewired\Rewired
- */
-class Rewired extends Facade
-{
-    protected static function getFacadeAccessor(): string
+    /**
+     * @see \oxytoxin\Rewired\Rewired
+     */
+    class Rewired extends Facade
     {
-        return \oxytoxin\Rewired\Rewired::class;
+        protected static function getFacadeAccessor(): string
+        {
+            return \oxytoxin\Rewired\Rewired::class;
+        }
     }
-}

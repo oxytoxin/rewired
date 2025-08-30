@@ -1,0 +1,126 @@
+import React, { ComponentType, useEffect, useMemo, useState } from 'react';
+import ReactDOM from 'react-dom/client';
+
+interface BaseProps {
+    wire_id: string;
+
+    [key: string]: unknown;
+}
+
+interface AppProps {
+    componentName: string;
+    props: BaseProps;
+}
+
+// Grab all .tsx under rewired (including nested)
+const modules = import.meta.glob<{ default: ComponentType<Record<string, unknown>> }>('./rewired/**/*.tsx');
+
+const App: React.FC<AppProps> = ({ componentName, props }) => {
+    const [ComponentToRender, setComponentToRender] = useState<ComponentType<Record<string, unknown>> | null>(null);
+    const [notFound, setNotFound] = useState(false);
+    props.wire = useMemo(() => LivewireWrapper(props.wire_id), [props.wire_id]);
+
+    useEffect(() => {
+        let isMounted = true;
+        setNotFound(false);
+        setComponentToRender(null);
+
+        const load = async () => {
+            // normalize keys like "ui/Button" from paths
+            const entry = Object.entries(modules).find(([path]) => {
+                // e.g. "./rewired/ui/Button.tsx" → "ui/Button"
+                const relative = path.replace(/^\.\/rewired\//, '').replace(/\.\w+$/, '');
+                return relative === componentName;
+            });
+
+            if (!entry) {
+                if (isMounted) {
+                    setNotFound(true);
+                }
+                return;
+            }
+
+            const [, importer] = entry;
+            const module = await importer();
+
+            if (isMounted) {
+                setComponentToRender(() => module.default);
+            }
+        };
+
+        void load();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [componentName]);
+
+    if (notFound) {
+        return <div>Component "{componentName}" not found.</div>;
+    }
+
+    if (!ComponentToRender) {
+        return null; // nothing until loaded
+    }
+
+    return <ComponentToRender {...props} />;
+};
+document.addEventListener('livewire:navigated', () => {
+    const rootElement = document.getElementById('rewired');
+    if (!rootElement) return;
+
+    const root = ReactDOM.createRoot(rootElement);
+
+    const componentName = rootElement.getAttribute('data-component') ?? '';
+    const propsAttr = rootElement.getAttribute('data-props') ?? '{}';
+
+    let parsedProps: Record<string, unknown>;
+    try {
+        parsedProps = JSON.parse(propsAttr) as Record<string, unknown>;
+    } catch {
+        parsedProps = {};
+    }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    root.render(<App componentName={componentName} props={parsedProps} />);
+});
+
+function LivewireWrapper(wire_id: string) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const wire = window.Livewire.find(wire_id);
+    if (typeof wire !== 'object' || wire === null) {
+        throw new Error('LivewireWrapper expected a Livewire $wire object, got: ' + wire);
+    }
+    return new Proxy(wire, {
+        get(target, prop, receiver) {
+            const orig = Reflect.get(target, prop, receiver);
+
+            if (typeof orig === 'function') {
+                return async (...args: never[]) => {
+                    const result = await orig(...args);
+                    const errors =
+                        Object.keys(target.__instance.snapshot.memo.errors).length > 0
+                            ? (stripPrefixFromKeys(target.__instance.snapshot.memo.errors, 'props.') as Record<string, string>)
+                            : null;
+
+                    return { result, errors };
+                };
+            }
+
+            return orig;
+        },
+    });
+}
+
+function stripPrefixFromKeys<T extends object>(obj: T, prefix: string): Record<string, never> {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return Object.fromEntries(
+        Object.entries(obj).map(([key, value]) => {
+            const newKey = key.startsWith(prefix) ? key.slice(prefix.length) : key;
+            return [newKey, value];
+        }),
+    );
+}
